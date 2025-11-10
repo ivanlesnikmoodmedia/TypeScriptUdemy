@@ -3,3 +3,11 @@ function generateError(msg?: string) {
 }
 
 generateError();
+
+type User = {
+    name: string;
+    age: number;
+    role?: 'admin' | 'user';
+};
+
+let input = null;
