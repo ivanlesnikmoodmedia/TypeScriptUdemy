@@ -56,7 +56,7 @@ class LinkedList<T> {
                 previous = current;
                 current = current.next;
             }
-            previous.next = current.next;
+            //previous.next = current.next;
         }
         this.length--;
         return current;
