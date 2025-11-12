@@ -1,4 +1,4 @@
-function logger<T extends { new (...args: any[]): {} }>(target: T, ctx: ClassDecoratorContext) {
+function logger<T extends { new (...args: any[]): {} }>(target: T, ctx: any) {
     console.log(target);
     console.log(ctx);
     console.log("Logging...");
@@ -10,14 +10,15 @@ function logger<T extends { new (...args: any[]): {} }>(target: T, ctx: ClassDec
     };
 }
 
-function autobind(target: (...args: any[]) => any, ctx: ClassDecoratorContext) {
-    ctx.addInitializer(function (this: any) {
- //       this[ctx.name] = this[ctx.name].bind(this);
-    });
-
-    return function (this: any) {
-        console.log("Autobind decorator applied");
-        target.apply(this);
+function autobind(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value;
+    return {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const boundFunction = originalMethod.bind(this);
+            return boundFunction;
+        },
     };
 }
 
@@ -25,7 +26,7 @@ function autobind(target: (...args: any[]) => any, ctx: ClassDecoratorContext) {
 class User {
     name = "John Doe";
 
-//    @autobind
+    @autobind
     greet() {
         console.log(`Hello, my name is ${this.name}`);
     }
