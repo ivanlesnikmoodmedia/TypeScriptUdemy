@@ -88,3 +88,104 @@ class Product {
 
 const p1 = new Product('Book', 19); 
 const p2 = new Product('Book 2', 29);
+
+function Autobind(target: any, methodName: string | Symbol, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value;
+    const adjDescriptor: PropertyDescriptor = {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const boundFn = originalMethod.bind(this);
+            return boundFn;
+        }
+    };
+    return adjDescriptor;
+}
+
+class Printer {
+    message = 'This works!';
+
+    @Autobind
+    showMessage() {
+        console.log(this.message);
+    }
+}
+
+const p = new Printer();
+
+const button = document.querySelector('button')!;
+button.addEventListener('click', p.showMessage.bind(p));
+
+interface ValidatorConfig {
+    [property: string]: {
+        [validatableProp: string]: string[] // ['required', 'positive']
+    }
+}
+
+
+const registeredValidators: ValidatorConfig = {};
+
+function Required(target: any, propName: string) {
+    registeredValidators[target.constructor.name] = {
+        ...registeredValidators[target.constructor.name],
+        [propName]: ['required']
+    };
+
+function PositiveNumber(target: any, propName: string) {
+    registeredValidators[target.constructor.name] = {
+        ...registeredValidators[target.constructor.name],
+        [propName]: ['positive']
+    };
+}
+
+function Validate(obj: any) {
+    const objValidatorConfig = registeredValidators[obj.constructor.name];
+    if (!objValidatorConfig) {
+        return true;
+    }
+    for (const prop in objValidatorConfig) {
+        for (const validator of objValidatorConfig[prop]) {
+            switch (validator) {
+                case 'required':
+                    //return !!obj[prop];
+                    //isValid = isValid && !!obj[prop];
+                    break;
+                case 'positive':
+                   // return obj[prop] > 0;
+                    //isValid = isValid && obj[prop] > 0;
+                    break;
+            }
+        }
+    }
+    //return isValid;
+}
+
+class Course {
+    @Required
+    title: string;
+    @PositiveNumber
+    price: number;
+
+    constructor(t: string, p: number) {
+        this.title = t;
+        this.price = p;
+    }
+}
+
+const courseForm = document.querySelector('forom')!;
+courseForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const titleEl = document.getElementById('title') as HTMLInputElement;
+    const priceEl = document.getElementById('price') as HTMLInputElement;
+
+    const title = titleEl.value;
+    const price = +priceEl.value;
+
+    const createdCourse = new Course(title, price);
+    if (!Validate(createdCourse)) {
+        alert('Invalid course data');
+        return;
+    }
+    console.log(createdCourse);
+});
+}
