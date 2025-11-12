@@ -17,4 +17,7 @@ type Perms = {
     action: string;
     resource: string;
 }[];
-//type Perms1 = AppUser["permissions"]; 
+//type Perms1 = AppUser["permissions"];  
+type Perm = Perms[number];
+type Names = string[];
+type Name = Names[number];
