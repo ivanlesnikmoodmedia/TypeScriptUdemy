@@ -1,4 +1,4 @@
-import { FC } from "react";
+//import { FC } from "react";
 
 type Goal = {
     id: string;
@@ -11,8 +11,8 @@ interface CourseGoalsProps {
     goals: Goal[];
 }
 
-//export default function CourseGoals({ goals }: CourseGoalsProps) {
-const CourseGoals: FC<CourseGoalsProps> = () => {
+export default function CourseGoals({ goals }: CourseGoalsProps) {
+//const CourseGoals: FC<CourseGoalsProps> = () => {
     return (
         <ul>
           {goals.map((goal) => (
@@ -30,4 +30,4 @@ const CourseGoals: FC<CourseGoalsProps> = () => {
      );
 }
 
-export default CourseGoals;
+//export default CourseGoals;

@@ -1,0 +1,12 @@
+{
+  "compailerOptions": {
+  "target": "es2020",
+  "esModuleInterop": true,
+  "skipLibCheck": true,
+  "modele": "NodeNext",
+  "outDir": "dist",
+  "lib": ["ES2020"],
+  "strict": true,
+  "allowImportingTsExtensions":  true
+ }
+}
